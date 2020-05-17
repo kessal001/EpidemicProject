@@ -1,0 +1,2 @@
+# EpidemicProject
+Blazor client app.
