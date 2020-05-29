@@ -1,0 +1,34 @@
+﻿<h3>SirDataGridComponent</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Susceptible</th>
+            <th scope="col">Infected</th>
+            <th scope="col">Removed</th>
+        </tr>
+    </thead>
+    <tbody>
+        @try
+        {
+            @foreach (var item in GridData)
+            {
+                <tr>
+                    <th scope="row">@item.Dt</th>
+                    <td>@item.Ds</td>
+                    <td>@item.Di</td>
+                    <td>@item.Dr</td>
+                </tr>
+            }
+        }
+        catch (Exception)
+        {
+
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public List<SIRStat> GridData { get; set; } = new List<SIRStat>();
+}

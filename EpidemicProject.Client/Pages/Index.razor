@@ -1,5 +1,35 @@
 ﻿@page "/"
 
-@code{
+<button @onclick="OnYes">Yes!</button>
 
+
+<RadzenButton Text="@text"></RadzenButton>
+@code {
+    string text = "Hi";
 }
+<DxChart Data="@ChartsData">
+    <DxChartAreaSeries Name="Suscettibili" Filter="@((SIRStat s) => s.Dt >= 1)"
+                       ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Ds)" />
+    <DxChartAreaSeries Name="Infetti" Filter="@((SIRStat s) => s.Dt >= 1)"
+                       ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Di)" />
+    <DxChartAreaSeries Name="Rimossi" Filter="@((SIRStat s) => s.Dt >= 1)"
+                       ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Dr)" />
+    <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+</DxChart>
+
+@code {
+    IQueryable<SIRStat> ChartsData;
+    public List<SIRStat> Stat { get; set; } = new List<SIRStat>();
+    public ReturnList ListaValori { get; set; } = new ReturnList();
+    private void OnYes()
+    {
+        SIRClass sirValue = new SIRClass();
+        ListaValori = sirValue.AvviaSimulazione();
+        for (int i = 0; i < ListaValori.DiList.Count; i++)
+        {
+            Stat.Add(new SIRStat(ListaValori.DsList[i], ListaValori.DiList[i], ListaValori.DrList[i], i + 1));
+        }
+        ChartsData = Stat.AsQueryable();
+    }
+}
+

@@ -1,0 +1,14 @@
+﻿@page "/covidstats"
+@inject HttpClient Http;
+<h3>CovidStats</h3>
+<button @onclick="GetCountries">Test</button>
+
+
+
+@code {
+    public CountriesModel[] listaNazioni { get; set; }
+    public async void GetCountries()
+    {
+        listaNazioni = await Http.GetFromJsonAsync<CountriesModel[]>("https://api.covid19api.com/countries");
+    }
+}
