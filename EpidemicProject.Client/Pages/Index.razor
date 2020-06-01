@@ -1,29 +1,103 @@
 ﻿@page "/"
+@inject DialogService dialogService
 
-<button @onclick="OnYes">Yes!</button>
+    <div style="padding-bottom:5px; margin-left:0.625rem">
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="assessment" Text="Dati" Style="padding-right:6px; padding-left:2px;" Click="@(args => dialogService.Open<CardComponentButton>($"Order",
+                        new Dictionary<string, object>() { { "Dati", ChartsData },{"Tipo","Dati"} },
+                        new DialogOptions(){ Width = "700px", Height = "530px", Left = "0px" }))" />
 
 
-<RadzenButton Text="@text"></RadzenButton>
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="lightbulb_outline" Text="Formule" Style="padding-right:6px; padding-left:2px;" Click="@(args => dialogService.Open<CardComponentButton>($"Order",
+                        new Dictionary<string, object>() { { "Dati", null },{"Tipo","Formule"} },
+                        new DialogOptions(){ Width = "1050px", Height = "600px", Left = "0px" }))" />
+    </div>
+
+<div class="container">
+    <div class="row" style="margin-left: -20px;">
+        <div class="col">
+            <label for="Suscettible" style="width: 100%">Suscettibili:</label>
+            <input class="form-control form-control-sm" type="number" placeholder="" @bind="BindValue.SusceptiblePopulation" @bind:event="oninput" @onchange="Change">
+            <br />
+        </div>
+        <div class="col">
+            <label for="Infetti" style="width:100%">Infetti:</label>
+            <input class="form-control form-control-sm" type="number" placeholder="" @bind="BindValue.InfectedPopulation" @bind:event="oninput" @onchange="Change">
+            <br />
+        </div>
+        <div class="col">
+            <label for="Beta" style="width:100%">Beta/R (Coefficiente di contagio):</label>
+            <input class="form-control form-control-sm" type="number" placeholder="" @bind="BindValue.Beta" @bind:event="oninput" @onchange="Change">
+            <br />
+        </div>
+        <div class="w-100"></div>
+        <div class="col">
+            <label for="Rimossi" style="width:100%">Rimossi:</label>
+            <input class="form-control form-control-sm" type="number" placeholder="" @bind="BindValue.RemovedPopulation" @bind:event="oninput" @onchange="Change">
+            <br />
+        </div>
+        <div class="col">
+            <label for="Alpha" style="width:100%">Gamma (Coefficiente di rimozione):</label>
+            <input class="form-control form-control-sm" type="number" placeholder="" @bind="BindValue.Alpha" @bind:event="oninput" @onchange="Change">
+            <br />
+        </div>
+        <div class="col">
+            <label for="TotalPopulation" style="width:100%">Popolazione totale: @BindValue.TotalPopulation</label>
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-outline-primary" @onclick="Simula" style="margin-left:0.625rem">Avvia simulazione!!</button>
+
+<div style="visibility:@(!GraphState?"hidden":"visible");">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <div class="zoom">
+                    <DxChart Data="@ChartsData" @onclick="@(args => dialogService.Open<CardComponentGraph>($"Order",
+                        new Dictionary<string, object>() { { "Dati", ChartsData },{"Tipo","DxChartAreaSeries"} },
+                        new DialogOptions(){ Width = "1050px", Height = "500px", Left = "0px" }))">
+                        <DxChartAreaSeries Name="Suscettibili" Filter="@((SIRStat s) => s.Dt >= 1)"
+                                           ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Ds)" />
+                        <DxChartAreaSeries Name="Infetti" Filter="@((SIRStat s) => s.Dt >= 1)"
+                                           ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Di)" />
+                        <DxChartAreaSeries Name="Rimossi" Filter="@((SIRStat s) => s.Dt >= 1)"
+                                           ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Dr)" />
+                        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+                    </DxChart>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="zoom">
+                    <DxChart Data="@ChartsData" @onclick="@(args => dialogService.Open<CardComponentGraph>($"Order",
+                        new Dictionary<string, object>() { { "Dati", ChartsData },{"Tipo","DxChartStackedAreaSeries"} },
+                        new DialogOptions(){ Width = "1050px", Height = "500px", Left = "0px" }))">
+                        <DxChartStackedAreaSeries Name="Suscettibili" Filter="@((SIRStat s) => s.Dt >= 1)"
+                                                  ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Ds)" />
+                        <DxChartStackedAreaSeries Name="Infetti" Filter="@((SIRStat s) => s.Dt >= 1)"
+                                                  ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Di)" />
+                        <DxChartStackedAreaSeries Name="Rimossi" Filter="@((SIRStat s) => s.Dt >= 1)"
+                                                  ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Dr)" />
+                        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+                    </DxChart>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @code {
-    string text = "Hi";
-}
-<DxChart Data="@ChartsData">
-    <DxChartAreaSeries Name="Suscettibili" Filter="@((SIRStat s) => s.Dt >= 1)"
-                       ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Ds)" />
-    <DxChartAreaSeries Name="Infetti" Filter="@((SIRStat s) => s.Dt >= 1)"
-                       ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Di)" />
-    <DxChartAreaSeries Name="Rimossi" Filter="@((SIRStat s) => s.Dt >= 1)"
-                       ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Dr)" />
-    <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
-</DxChart>
-
-@code {
+    public bool GraphState { get; set; } = false;
     IQueryable<SIRStat> ChartsData;
     public List<SIRStat> Stat { get; set; } = new List<SIRStat>();
     public ReturnList ListaValori { get; set; } = new ReturnList();
-    private void OnYes()
+    public SIRClass BindValue { get; set; } = new SIRClass();
+
+    private void Simula()
     {
-        SIRClass sirValue = new SIRClass();
+        GraphState = true;
+        Stat.Clear();
+        SIRClass sirValue = new SIRClass(BindValue.TotalPopulation, BindValue.SusceptiblePopulation, BindValue.InfectedPopulation, BindValue.RemovedPopulation, BindValue.Beta, BindValue.Alpha);
         ListaValori = sirValue.AvviaSimulazione();
         for (int i = 0; i < ListaValori.DiList.Count; i++)
         {
@@ -31,5 +105,12 @@
         }
         ChartsData = Stat.AsQueryable();
     }
+
+    private void Change()
+    {
+        BindValue.TotalPopulation = BindValue.SusceptiblePopulation + BindValue.InfectedPopulation + BindValue.RemovedPopulation;
+    }
+
 }
+
 

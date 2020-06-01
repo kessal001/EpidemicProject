@@ -1,0 +1,30 @@
+﻿@if (Tipo == "DxChartAreaSeries")
+{
+    <DxChart Data="@Dati">
+        <DxChartAreaSeries Name="Suscettibili" Filter="@((SIRStat s) => s.Dt >= 1)"
+                           ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Ds)" />
+        <DxChartAreaSeries Name="Infetti" Filter="@((SIRStat s) => s.Dt >= 1)"
+                           ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Di)" />
+        <DxChartAreaSeries Name="Rimossi" Filter="@((SIRStat s) => s.Dt >= 1)"
+                           ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Dr)" />
+        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+    </DxChart>
+}
+else
+{
+    <DxChart Data="@Dati">
+        <DxChartStackedAreaSeries Name="Suscettibili" Filter="@((SIRStat s) => s.Dt >= 1)"
+                                  ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Ds)" />
+        <DxChartStackedAreaSeries Name="Infetti" Filter="@((SIRStat s) => s.Dt >= 1)"
+                                  ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Di)" />
+        <DxChartStackedAreaSeries Name="Rimossi" Filter="@((SIRStat s) => s.Dt >= 1)"
+                                  ArgumentField="@(s => s.Dt)" ValueField="@(s => s.Dr)" />
+        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+    </DxChart>
+}
+@code {
+    [Parameter]
+    public IQueryable<SIRStat> Dati { get; set; }
+    [Parameter]
+    public string Tipo { get; set; }
+}

@@ -3,15 +3,9 @@ using System.Collections.Generic;
 
 namespace DAL
 {
-#warning Scrivi documentazione
-    public class ReturnList
-    {
-        public List<double> DsList { get; set; }
-        public List<double> DiList { get; set; }
-        public List<double> DrList { get; set; }
-    }
     public class SIRClass
     {
+        #region variabili
         /// <summary>
         /// Valore per calcoli
         /// </summary>
@@ -59,7 +53,7 @@ namespace DAL
         /// <summary>
         /// Properties per settare il tempo
         /// </summary>
-        private double time;
+        private double time = 0.0;
         public double Time
         {
             get { return time; }
@@ -68,13 +62,13 @@ namespace DAL
         /// <summary>
         /// Valore di diffusione della malattia
         /// </summary>
-        private double beta;
+        private double beta = 2.0;
         public double Beta
         {
             get { return beta; }
             set { beta = value; }
         }
-        private double alpha;
+        private double alpha = 0.5;
 
         public double Alpha
         {
@@ -86,16 +80,23 @@ namespace DAL
         List<double> dsList = new List<double>();
         List<double> diList = new List<double>();
         List<double> drList = new List<double>();
+        #endregion      
+        public SIRClass(double totalPopulation, double susceptiblePopulation, double infectedPopulation, double removedPopulation, double beta, double alpha)
+        {
+            TotalPopulation = totalPopulation;
+            SusceptiblePopulation = susceptiblePopulation;
+            InfectedPopulation = infectedPopulation;
+            RemovedPopulation = removedPopulation;
+            Beta = beta;
+            Alpha = alpha;
+        }
+        public SIRClass()
+        {
+
+        }
 
         public ReturnList AvviaSimulazione()
         {
-            TotalPopulation = 10000.0;
-            SusceptiblePopulation = 9000.0;
-            InfectedPopulation = 1000.0;
-            RemovedPopulation = 0.0;
-            time = 0.0;
-            beta = 2.0;
-            alpha = 0.5;
             for (int i = 0; i < 100; ++i)
             {
                 dsList.Add(susceptiblePopulation);
