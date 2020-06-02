@@ -16,7 +16,6 @@ namespace DAL
         private double totalPopulation;
         public double TotalPopulation
         {
-#warning Implementare controllo sui valori
             get { return totalPopulation; }
             set { totalPopulation = value; }
         }
@@ -26,9 +25,14 @@ namespace DAL
         private double susceptiblePopulation;
         public double SusceptiblePopulation
         {
-#warning Implementare controllo sui valori
             get { return susceptiblePopulation; }
-            set { susceptiblePopulation = value; }
+            set
+            {
+                if (value < 0)
+                    susceptiblePopulation = 0;
+                else
+                    susceptiblePopulation = value;
+            }
         }
         /// <summary>
         /// Numero totale della infetti
@@ -36,9 +40,14 @@ namespace DAL
         private double infectedPopulation;
         public double InfectedPopulation
         {
-#warning Implementare controllo sui valori
             get { return infectedPopulation; }
-            set { infectedPopulation = value; }
+            set
+            {
+                if (value < 0)
+                    infectedPopulation = 0;
+                else
+                    infectedPopulation = value;
+            }
         }
         /// <summary>
         /// Numero totale della rimossi
@@ -46,9 +55,12 @@ namespace DAL
         private double removedPopulation;
         public double RemovedPopulation
         {
-#warning Implementare controllo sui valori
             get { return removedPopulation; }
-            set { removedPopulation = value; }
+            set {
+                if (value < 0)
+                    removedPopulation = 0;
+                else
+                    removedPopulation = value; }
         }
         /// <summary>
         /// Properties per settare il tempo

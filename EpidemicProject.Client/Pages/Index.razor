@@ -1,6 +1,8 @@
 ﻿@page "/"
 @inject DialogService dialogService
 
+    <h3>Simulazione</h3>
+
     <div style="padding-bottom:5px; margin-left:0.625rem">
         <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="assessment" Text="Dati" Style="padding-right:6px; padding-left:2px;" Click="@(args => dialogService.Open<CardComponentButton>($"Order",
                         new Dictionary<string, object>() { { "Dati", ChartsData },{"Tipo","Dati"} },

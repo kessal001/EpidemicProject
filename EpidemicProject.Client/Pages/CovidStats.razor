@@ -1,14 +1,76 @@
 ﻿@page "/covidstats"
 @inject HttpClient Http;
-<h3>CovidStats</h3>
-<button @onclick="GetCountries">Test</button>
+<h3>Statistiche Covid-19</h3>
+
+
+<iframe width="1024" height="576" src="https://app.developer.here.com/coronavirus/" frameborder="0"></iframe>
+
+
+<RadzenAutoComplete Data="@listaNazioni.AsEnumerable()" TextProperty="Country"
+                    Style="margin-bottom: 20px" Change="@(() => StateHasChanged())" @bind-Value="Nazione" />
+<button class="btn btn-outline-primary" @onclick="ClickButton" style="margin-left:0.625rem">Avvia simulazione!!</button>
+
+<div style="visibility:@(!GraphState?"hidden":"visible");">
+    <DxChart Data="NazioneSceltaDataQuery">
+        <DxChartLineSeries Name="Confirmed" Filter="@((CountryModels s) => s.Country == s.Country)"
+                           ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Confirmed)" />
+        <DxChartLineSeries Name="Deaths" Filter="@((CountryModels s) => s.Country == s.Country)"
+                           ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Deaths)" />
+        <DxChartLineSeries Name="Recovered" Filter="@((CountryModels s) => s.Country == s.Country)"
+                           ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Recovered)" />
+        <DxChartLineSeries Name="Active" Filter="@((CountryModels s) => s.Country == s.Country)"
+                           ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Active)" />
+        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+    </DxChart>
+
+    <DxChart Data="NazioneSceltaDataQuery">
+        <DxChartBarSeries Name="Confirmed" Filter="@((CountryModels s) => s.Country == s.Country)"
+                          ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Confirmed)" />
+        <DxChartBarSeries Name="Deaths" Filter="@((CountryModels s) => s.Country == s.Country)"
+                          ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Deaths)" />
+        <DxChartBarSeries Name="Recovered" Filter="@((CountryModels s) => s.Country == s.Country)"
+                          ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Recovered)" />
+        <DxChartBarSeries Name="Active" Filter="@((CountryModels s) => s.Country == s.Country)"
+                          ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Active)" />
+        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+    </DxChart>
+    <DxChart Data="NazioneSceltaDataQuery">
+        <DxChartStackedBarSeries Name="Confirmed" Filter="@((CountryModels s) => s.Country == s.Country)"
+                                 ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Confirmed)" />
+        <DxChartStackedBarSeries Name="Deaths" Filter="@((CountryModels s) => s.Country == s.Country)"
+                                 ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Deaths)" />
+        <DxChartStackedBarSeries Name="Recovered" Filter="@((CountryModels s) => s.Country == s.Country)"
+                                 ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Recovered)" />
+        <DxChartStackedBarSeries Name="Active" Filter="@((CountryModels s) => s.Country == s.Country)"
+                                 ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Active)" />
+        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+    </DxChart>
+</div>
 
 
 
-@code {
-    public CountriesModel[] listaNazioni { get; set; }
-    public async void GetCountries()
-    {
-        listaNazioni = await Http.GetFromJsonAsync<CountriesModel[]>("https://api.covid19api.com/countries");
+
+
+
+    @code {
+        public CountriesModel[] listaNazioni { get; set; }
+
+        public bool GraphState { get; set; } = false;
+        IQueryable<CountryModels> NazioneSceltaDataQuery;
+        public List<CountryModels> NazioneSceltaData { get; set; } = new List<CountryModels>();
+        public string Nazione { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            listaNazioni = await Http.GetFromJsonAsync<CountriesModel[]>("https://api.covid19api.com/countries");
+        }
+
+        public async void ClickButton()
+        {
+            GraphState = true;
+            NazioneSceltaData.Clear();
+            NazioneSceltaData = (await Http.GetFromJsonAsync<CountryModels[]>("https://api.covid19api.com/country/" + Nazione)).ToList();
+            NazioneSceltaDataQuery = NazioneSceltaData.AsQueryable();
+            StateHasChanged();
+        }
     }
-}

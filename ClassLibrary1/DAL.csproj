@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\CountriesModel.cs" />
+    <Compile Include="Models\CountryModels.cs" />
     <Compile Include="Models\SIRStat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ReturnList.cs" />

@@ -2,7 +2,6 @@
 
 namespace DAL
 {
-#warning Scrivi documentazione
     public class ReturnList
     {
         public List<double> DsList { get; set; }
