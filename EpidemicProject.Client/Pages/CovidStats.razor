@@ -5,46 +5,195 @@
 
 <iframe width="1024" height="576" src="https://app.developer.here.com/coronavirus/" frameborder="0"></iframe>
 
+<hr />
 
 <RadzenAutoComplete Data="@listaNazioni.AsEnumerable()" TextProperty="Country"
                     Style="margin-bottom: 20px" Change="@(() => StateHasChanged())" @bind-Value="Nazione" />
-<button class="btn btn-outline-primary" @onclick="ClickButton" style="margin-left:0.625rem">Avvia simulazione!!</button>
+
+
+<button class="btn btn-outline-primary" @onclick="ClickButton" style="margin-left:0.625rem; margin-top: -30px;">Statistiche paese</button>
+
 
 <div style="visibility:@(!GraphState?"hidden":"visible");">
-    <DxChart Data="NazioneSceltaDataQuery">
-        <DxChartLineSeries Name="Confirmed" Filter="@((CountryModels s) => s.Country == s.Country)"
-                           ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Confirmed)" />
-        <DxChartLineSeries Name="Deaths" Filter="@((CountryModels s) => s.Country == s.Country)"
-                           ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Deaths)" />
-        <DxChartLineSeries Name="Recovered" Filter="@((CountryModels s) => s.Country == s.Country)"
-                           ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Recovered)" />
-        <DxChartLineSeries Name="Active" Filter="@((CountryModels s) => s.Country == s.Country)"
-                           ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Active)" />
-        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
-    </DxChart>
+    <h5>Statistiche generali</h5>
+    @if (NazioneSceltaData.Count == 0)
+    {
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="card" style="width: 30rem;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/SARS-CoV-2_without_background.png/260px-SARS-CoV-2_without_background.png" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Covid-19</h5>
+                            <p class="card-text">COVID-19 (acronimo dell'inglese COronaVIrus Disease 19, cinese: 冠状病毒病19 ), o malattia respiratoria acuta da SARS-CoV-2 e più semplicemente malattia da coronavirus 2019 o anche morbo da coronavirus 2019, è una malattia infettiva respiratoria causata dal virus denominato SARS-CoV-2 appartenente alla famiglia dei coronavirus. È un nome sia femminile che maschile. I primi casi sono stati riscontrati durante la pandemia di COVID-19 del 2019-2020. Al 1 giugno il tasso di letalità è del 6,003%</p>
+                            <a href="https://it.wikipedia.org/wiki/COVID-19" class="btn btn-primary">Wikipedia page.</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="card" style="width: 30rem; height:100%">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Symptoms_of_coronavirus_disease_2019_2.0-IT.svg/langit-290px-Symptoms_of_coronavirus_disease_2019_2.0-IT.svg.png" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Covid-19</h5>
+                            <p class="card-text">
+                                Coloro che sono infetti possono risultare asintomatici o presentare alcuni sintomi come febbre, tosse o respiro corto o il più comune raffreddore.Vomito, diarrea o sintomi respiratori superiori (ad es. starnuti, naso che cola, mal di gola) sono meno frequenti. La perdita dell'olfatto(anosmia) con la conseguente alterazione del senso del gusto (disgeusia) può associarsi agli altri sintomi descritti oppure può rappresentare l'unico sintomo presente. I casi possono tuttavia progredire in peggio evolvendo in polmonite, insufficienza multiorgano, fino a portare al decesso nei soggetti più vulnerabili.
+                                Il periodo di incubazione varia da 2 a 14 giorni con un periodo mediano stimato di incubazione tra i 5 e i 6 giorni.
+                            </p>
+                            <a href="https://en.wikipedia.org/wiki/Coronavirus_disease_2019#Signs_and_symptoms" class="btn btn-primary">Wikipedia page about symptoms</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <DxChart Data="NazioneSceltaDataQuery">
-        <DxChartBarSeries Name="Confirmed" Filter="@((CountryModels s) => s.Country == s.Country)"
-                          ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Confirmed)" />
-        <DxChartBarSeries Name="Deaths" Filter="@((CountryModels s) => s.Country == s.Country)"
-                          ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Deaths)" />
-        <DxChartBarSeries Name="Recovered" Filter="@((CountryModels s) => s.Country == s.Country)"
-                          ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Recovered)" />
-        <DxChartBarSeries Name="Active" Filter="@((CountryModels s) => s.Country == s.Country)"
-                          ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Active)" />
-        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
-    </DxChart>
-    <DxChart Data="NazioneSceltaDataQuery">
-        <DxChartStackedBarSeries Name="Confirmed" Filter="@((CountryModels s) => s.Country == s.Country)"
-                                 ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Confirmed)" />
-        <DxChartStackedBarSeries Name="Deaths" Filter="@((CountryModels s) => s.Country == s.Country)"
-                                 ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Deaths)" />
-        <DxChartStackedBarSeries Name="Recovered" Filter="@((CountryModels s) => s.Country == s.Country)"
-                                 ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Recovered)" />
-        <DxChartStackedBarSeries Name="Active" Filter="@((CountryModels s) => s.Country == s.Country)"
-                                 ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Active)" />
-        <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
-    </DxChart>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Nazione</th>
+                    <th scope="col">Sigla</th>
+                    <th scope="col">Latitudine</th>
+                    <th scope="col">Longitudine</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">@NazioneSceltaData.First().Country</th>
+                    <td>@NazioneSceltaData.First().CountryCode</td>
+                    <td>@NazioneSceltaData.First().Lat</td>
+                    <td>>@NazioneSceltaData.First().Lon</td>
+                </tr>
+            </tbody>
+        </table>
+        <DxChart Data="NazioneSceltaDataQuery">
+            <DxChartLineSeries Name="Confirmed" Filter="@((CountryModels s) => s.Country == s.Country)"
+                               ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Confirmed)" />
+            <DxChartLineSeries Name="Deaths" Filter="@((CountryModels s) => s.Country == s.Country)"
+                               ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Deaths)" />
+            <DxChartLineSeries Name="Recovered" Filter="@((CountryModels s) => s.Country == s.Country)"
+                               ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Recovered)" />
+            <DxChartLineSeries Name="Active" Filter="@((CountryModels s) => s.Country == s.Country)"
+                               ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Active)" />
+            <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+        </DxChart>
+
+        <DxChart Data="NazioneSceltaDataQuery">
+            <DxChartBarSeries Name="Confirmed" Filter="@((CountryModels s) => s.Country == s.Country)"
+                              ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Confirmed)" />
+            <DxChartBarSeries Name="Deaths" Filter="@((CountryModels s) => s.Country == s.Country)"
+                              ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Deaths)" />
+            <DxChartBarSeries Name="Recovered" Filter="@((CountryModels s) => s.Country == s.Country)"
+                              ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Recovered)" />
+            <DxChartBarSeries Name="Active" Filter="@((CountryModels s) => s.Country == s.Country)"
+                              ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Active)" />
+            <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+        </DxChart>
+        <DxChart Data="NazioneSceltaDataQuery">
+            <DxChartStackedBarSeries Name="Confirmed" Filter="@((CountryModels s) => s.Country == s.Country)"
+                                     ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Confirmed)" />
+            <DxChartStackedBarSeries Name="Deaths" Filter="@((CountryModels s) => s.Country == s.Country)"
+                                     ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Deaths)" />
+            <DxChartStackedBarSeries Name="Recovered" Filter="@((CountryModels s) => s.Country == s.Country)"
+                                     ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Recovered)" />
+            <DxChartStackedBarSeries Name="Active" Filter="@((CountryModels s) => s.Country == s.Country)"
+                                     ArgumentField="@(s => s.Date.DateTime)" ValueField="@(s => s.Active)" />
+            <DxChartLegend Position="RelativePosition.Outside" HorizontalAlignment="HorizontalAlignment.Right" />
+        </DxChart>
+
+        <h5 style="margin-top:10px">Tabella dettagli</h5>
+
+        <button class="btn btn-outline-primary" @onclick="() => Stato = !Stato" style="width: 100%; margin-bottom: 20px; margin-top:10px">Espandi</button>
+        <div style="visibility:@(Stato?"visible":"hidden")">
+            <table class="table">
+                <thead class="thead">
+                    <tr>
+                        <th scope="col">
+                            <button class="btn btn-outline-primary" @onclick="OrdinaData">
+                                Data @if (Ordinamento)
+                                {
+                                    <img src="https://img.icons8.com/metro/26/000000/long-arrow-up.png" />
+                                }
+                                else
+                                {
+                                    <img src="https://img.icons8.com/metro/26/000000/long-arrow-down.png" />
+                                }
+                            </button>
+                        </th>
+                        <th scope="col">
+                            <button class="btn btn-outline-primary" @onclick="OrdinaConfermati">
+                                Confermati @if (Ordinamento)
+                                {
+                                    <img src="https://img.icons8.com/metro/26/000000/long-arrow-up.png" />
+                                }
+                                else
+                                {
+                                    <img src="https://img.icons8.com/metro/26/000000/long-arrow-down.png" />
+                                }
+                            </button>
+                        </th>
+                        <th scope="col">
+                            <button class="btn btn-outline-primary" @onclick="OrdinaAttivi">
+                                Attivi @if (Ordinamento)
+                                {
+                                    <img src="https://img.icons8.com/metro/26/000000/long-arrow-up.png" />
+                                }
+                                else
+                                {
+                                    <img src="https://img.icons8.com/metro/26/000000/long-arrow-down.png" />
+                                }
+                            </button>
+                        </th>
+                        <th scope="col">
+                            <button class="btn btn-outline-primary" @onclick="OrdinaMorti">
+                                Morti @if (Ordinamento)
+                                {
+                                    <img src="https://img.icons8.com/metro/26/000000/long-arrow-up.png" />
+                                }
+                                else
+                                {
+                                    <img src="https://img.icons8.com/metro/26/000000/long-arrow-down.png" />
+                                }
+                            </button>
+                        </th>
+                        <th scope="col">
+                            <button class="btn btn-outline-primary" @onclick="OrdinaGuariti">
+                                Guariti @if (Ordinamento)
+                                {
+                                    <img src="https://img.icons8.com/metro/26/000000/long-arrow-up.png" />
+                                }
+                                else
+                                {
+                                    <img src="https://img.icons8.com/metro/26/000000/long-arrow-down.png" />
+                                }
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                    @foreach (var item in NazioneSceltaData)
+                    {
+                        <tr>
+                            <th scope="row">@item.Date.DateTime</th>
+                            <td>@item.Confirmed</td>
+                            <td>@item.Active</td>
+                            <td>@item.Deaths</td>
+                            <td>@item.Recovered</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    }
+
+
 </div>
 
 
@@ -52,25 +201,70 @@
 
 
 
-    @code {
-        public CountriesModel[] listaNazioni { get; set; }
+@code {
+    public bool Stato { get; set; } = false;
+    public bool Ordinamento { get; set; } = false;
+    public CountriesModel[] listaNazioni { get; set; }
+    public bool GraphState { get; set; } = false;
+    IQueryable<CountryModels> NazioneSceltaDataQuery;
 
-        public bool GraphState { get; set; } = false;
-        IQueryable<CountryModels> NazioneSceltaDataQuery;
-        public List<CountryModels> NazioneSceltaData { get; set; } = new List<CountryModels>();
-        public string Nazione { get; set; }
+    public string Nazione { get; set; }
 
-        protected override async Task OnInitializedAsync()
-        {
-            listaNazioni = await Http.GetFromJsonAsync<CountriesModel[]>("https://api.covid19api.com/countries");
-        }
-
-        public async void ClickButton()
-        {
-            GraphState = true;
-            NazioneSceltaData.Clear();
-            NazioneSceltaData = (await Http.GetFromJsonAsync<CountryModels[]>("https://api.covid19api.com/country/" + Nazione)).ToList();
-            NazioneSceltaDataQuery = NazioneSceltaData.AsQueryable();
-            StateHasChanged();
-        }
+    protected override async Task OnInitializedAsync()
+    {
+        listaNazioni = await Http.GetFromJsonAsync<CountriesModel[]>("https://api.covid19api.com/countries");
     }
+
+    public async void ClickButton()
+    {
+        GraphState = true;
+        NazioneSceltaData.Clear();
+        NazioneSceltaData = (await Http.GetFromJsonAsync<CountryModels[]>("https://api.covid19api.com/country/" + Nazione)).ToList();
+        NazioneSceltaDataQuery = NazioneSceltaData.AsQueryable();
+        StateHasChanged();
+    }
+
+    public List<CountryModels> NazioneSceltaData { get; set; } = new List<CountryModels>();
+    public void OrdinaData()
+    {
+        if (Ordinamento)
+            NazioneSceltaData = NazioneSceltaData.OrderBy(x => x.Date).ToList();
+        else
+            NazioneSceltaData = NazioneSceltaData.OrderByDescending(x => x.Date).ToList();
+        Ordinamento = !Ordinamento;
+    }
+
+    public void OrdinaConfermati()
+    {
+        if (Ordinamento)
+            NazioneSceltaData = NazioneSceltaData.OrderBy(x => x.Confirmed).ToList();
+        else
+            NazioneSceltaData = NazioneSceltaData.OrderByDescending(x => x.Confirmed).ToList();
+        Ordinamento = !Ordinamento;
+    }
+    public void OrdinaAttivi()
+    {
+        if (Ordinamento)
+            NazioneSceltaData = NazioneSceltaData.OrderBy(x => x.Active).ToList();
+        else
+            NazioneSceltaData = NazioneSceltaData.OrderByDescending(x => x.Active).ToList();
+        Ordinamento = !Ordinamento;
+    }
+    public void OrdinaMorti()
+    {
+        if (Ordinamento)
+            NazioneSceltaData = NazioneSceltaData.OrderBy(x => x.Deaths).ToList();
+        else
+            NazioneSceltaData = NazioneSceltaData.OrderByDescending(x => x.Deaths).ToList();
+        Ordinamento = !Ordinamento;
+    }
+    public void OrdinaGuariti()
+    {
+        if (Ordinamento)
+            NazioneSceltaData = NazioneSceltaData.OrderBy(x => x.Recovered).ToList();
+        else
+            NazioneSceltaData = NazioneSceltaData.OrderByDescending(x => x.Recovered).ToList();
+        Ordinamento = !Ordinamento;
+    }
+
+}

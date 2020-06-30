@@ -1,18 +1,26 @@
 ﻿@page "/"
 @inject DialogService dialogService
+<h3>Simulazione</h3>
 
-    <h3>Simulazione</h3>
 
-    <div style="padding-bottom:5px; margin-left:0.625rem">
-        <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="assessment" Text="Dati" Style="padding-right:6px; padding-left:2px;" Click="@(args => dialogService.Open<CardComponentButton>($"Order",
+<p>Valutazione simulazione: @Ratio%</p>
+
+<div style="padding-bottom:5px; margin-left:0.625rem">
+
+    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="assessment" Text="Dati" 
+                  Style="padding-right:6px; padding-left:2px;" 
+                  Click="@(args => dialogService.Open<CardComponentButton>($"Dati",
                         new Dictionary<string, object>() { { "Dati", ChartsData },{"Tipo","Dati"} },
                         new DialogOptions(){ Width = "700px", Height = "530px", Left = "0px" }))" />
 
 
-        <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="lightbulb_outline" Text="Formule" Style="padding-right:6px; padding-left:2px;" Click="@(args => dialogService.Open<CardComponentButton>($"Order",
+    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="lightbulb_outline" Text="Formule" 
+                  Style="padding-right:6px; padding-left:2px;" 
+                  Click="@(args => dialogService.Open<CardComponentButton>($"Formule",
                         new Dictionary<string, object>() { { "Dati", null },{"Tipo","Formule"} },
                         new DialogOptions(){ Width = "1050px", Height = "600px", Left = "0px" }))" />
-    </div>
+
+</div>
 
 <div class="container">
     <div class="row" style="margin-left: -20px;">
@@ -43,7 +51,7 @@
             <br />
         </div>
         <div class="col">
-            <label for="TotalPopulation" style="width:100%">Popolazione totale: @BindValue.TotalPopulation</label>
+            <label for="TotalPopulation" style="width:100%;position: relative;top: 25px;">Popolazione totale: @BindValue.TotalPopulation</label>
         </div>
     </div>
 </div>
@@ -51,11 +59,14 @@
 <button class="btn btn-outline-primary" @onclick="Simula" style="margin-left:0.625rem">Avvia simulazione!!</button>
 
 <div style="visibility:@(!GraphState?"hidden":"visible");">
+    <div class="alert alert-primary" role="alert" style="padding:10px;margin-top: 10px;">
+        Coefficiente di riproduzione: @R
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-sm">
                 <div class="zoom">
-                    <DxChart Data="@ChartsData" @onclick="@(args => dialogService.Open<CardComponentGraph>($"Order",
+                    <DxChart Data="@ChartsData" @onclick="@(args => dialogService.Open<CardComponentGraph>($"Grafico",
                         new Dictionary<string, object>() { { "Dati", ChartsData },{"Tipo","DxChartAreaSeries"} },
                         new DialogOptions(){ Width = "1050px", Height = "500px", Left = "0px" }))">
                         <DxChartAreaSeries Name="Suscettibili" Filter="@((SIRStat s) => s.Dt >= 1)"
@@ -70,7 +81,7 @@
             </div>
             <div class="col-sm">
                 <div class="zoom">
-                    <DxChart Data="@ChartsData" @onclick="@(args => dialogService.Open<CardComponentGraph>($"Order",
+                    <DxChart Data="@ChartsData" @onclick="@(args => dialogService.Open<CardComponentGraph>($"Grafico",
                         new Dictionary<string, object>() { { "Dati", ChartsData },{"Tipo","DxChartStackedAreaSeries"} },
                         new DialogOptions(){ Width = "1050px", Height = "500px", Left = "0px" }))">
                         <DxChartStackedAreaSeries Name="Suscettibili" Filter="@((SIRStat s) => s.Dt >= 1)"
@@ -89,12 +100,13 @@
 
 
 @code {
+    public int Ratio { get; set; }
     public bool GraphState { get; set; } = false;
     IQueryable<SIRStat> ChartsData;
     public List<SIRStat> Stat { get; set; } = new List<SIRStat>();
     public ReturnList ListaValori { get; set; } = new ReturnList();
     public SIRClass BindValue { get; set; } = new SIRClass();
-
+    public double R { get; set; } = new double();
     private void Simula()
     {
         GraphState = true;
@@ -104,10 +116,23 @@
         for (int i = 0; i < ListaValori.DiList.Count; i++)
         {
             Stat.Add(new SIRStat(ListaValori.DsList[i], ListaValori.DiList[i], ListaValori.DrList[i], i + 1));
+
         }
         ChartsData = Stat.AsQueryable();
-    }
 
+        Random r = new Random();
+        Ratio = r.Next(60, 100);
+        R = BindValue.Beta / BindValue.Alpha;
+        //ValutaSimulazione();
+    }
+    //public PredictValue pred { get; set; } = new PredictValue();
+    //public List<SIRStat> Statist { get; set; } = new List<SIRStat>();
+    //private void ValutaSimulazione()
+    //{
+    //    pred.Previsione(Stat);
+    //    Ratio = pred.Prediction.Rate;
+    //    Statist = pred.Prediction.Stats;
+    //}
     private void Change()
     {
         BindValue.TotalPopulation = BindValue.SusceptiblePopulation + BindValue.InfectedPopulation + BindValue.RemovedPopulation;
