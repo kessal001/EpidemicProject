@@ -16,7 +16,7 @@ Esame maturit`a 2020
 ```
 ## Pedersoli Luca
 
-## lucapedersoli01@gmail.com
+## luca.pedersoli@mail.polimi.it
 
 ## ITCG “OLIVELLI“ - IPSSAR “PUTELLI“
 
