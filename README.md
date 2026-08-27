@@ -4,6 +4,16 @@ Simulatore epidemiologico interattivo basato sul modello matematico SIR, realizz
 
 Il progetto nasce come elaborato di maturità nel 2020 ed è stato completamente rinnovato nel 2026 per renderlo nuovamente compilabile, autonomo e adatto ai browser moderni.
 
+## Anteprima
+
+### Simulatore interattivo
+
+![Schermata del simulatore SIR con parametri, numero di riproduzione e grafico delle tre popolazioni](docs/images/simulatore.png)
+
+### Spiegazione del modello
+
+![Pagina didattica dedicata ai compartimenti suscettibili, infetti e rimossi](docs/images/modello-sir.png)
+
 ## Funzionalità
 
 - simulazione dell'evoluzione di un'epidemia con il modello SIR;
@@ -100,28 +110,102 @@ Le altre cartelle presenti nel repository appartengono agli esperimenti original
 
 ## Il modello SIR
 
-Il modello divide una popolazione chiusa in tre compartimenti:
+Il modello SIR descrive una popolazione chiusa suddividendola, in ogni istante di tempo $t$, in tre compartimenti:
 
-- `S` — persone suscettibili all'infezione;
-- `I` — persone infette e contagiose;
-- `R` — persone rimosse dalla catena di trasmissione.
+- $S(t)$ — persone **suscettibili**, che possono contrarre l'infezione;
+- $I(t)$ — persone **infette** e in grado di trasmettere la malattia;
+- $R(t)$ — persone **rimosse** dalla catena di trasmissione perché guarite, immuni o non più contagiose.
 
-La loro evoluzione è descritta dalle equazioni:
+La popolazione totale è costante:
 
-```text
-dS/dt = -βSI/N
-dI/dt =  βSI/N - γI
-dR/dt =  γI
-```
+$$
+N = S(t) + I(t) + R(t).
+$$
 
-Dove:
+### Equazioni differenziali
 
-- `β` rappresenta il coefficiente di contagio;
-- `γ` rappresenta il coefficiente di rimozione;
-- `N` è la popolazione totale;
-- `R₀ = β / γ` è il numero di riproduzione di base nelle condizioni iniziali del modello.
+L'evoluzione dei tre compartimenti è descritta dal sistema:
 
-L'applicazione integra numericamente le equazioni con il metodo Runge-Kutta del quarto ordine e registra un punto per ogni giorno simulato.
+$$
+\begin{aligned}
+\frac{dS}{dt} &= -\beta\frac{S I}{N}, \\
+\frac{dI}{dt} &= \beta\frac{S I}{N} - \gamma I, \\
+\frac{dR}{dt} &= \gamma I.
+\end{aligned}
+$$
+
+Il termine $\beta SI/N$ rappresenta i nuovi contagi per unità di tempo. La quantità $I/N$ è la frazione infetta della popolazione e $\beta$ misura l'intensità dei contatti capaci di produrre un contagio. Il termine $\gamma I$ rappresenta invece le persone che escono dal compartimento degli infetti.
+
+I parametri hanno quindi questo significato:
+
+- $\beta \geq 0$ è il **tasso di trasmissione**;
+- $\gamma > 0$ è il **tasso di rimozione**;
+- $1/\gamma$ è la durata media del periodo infettivo prevista dal modello;
+- $N$ è la popolazione totale, assunta costante.
+
+La conservazione della popolazione si verifica sommando le tre equazioni:
+
+$$
+\frac{d}{dt}(S+I+R)
+= -\beta\frac{SI}{N}
++ \beta\frac{SI}{N}
+- \gamma I
++ \gamma I
+= 0.
+$$
+
+### Numero di riproduzione e soglia epidemica
+
+Il numero di riproduzione di base è:
+
+$$
+R_0 = \frac{\beta}{\gamma}.
+$$
+
+$R_0$ indica il numero medio di infezioni secondarie generate da una persona infetta quando la popolazione è quasi interamente suscettibile. Durante la simulazione è più preciso considerare il numero di riproduzione effettivo:
+
+$$
+R_{\mathrm{eff}}(t) = R_0\frac{S(t)}{N}.
+$$
+
+Dalla seconda equazione del sistema:
+
+$$
+\frac{dI}{dt}
+= I\left(\beta\frac{S}{N}-\gamma\right)
+= \gamma I\left(R_{\mathrm{eff}}(t)-1\right).
+$$
+
+Ne segue che:
+
+- se $R_{\mathrm{eff}}(t) > 1$, il numero degli infetti cresce;
+- se $R_{\mathrm{eff}}(t) = 1$, gli infetti raggiungono un punto stazionario;
+- se $R_{\mathrm{eff}}(t) < 1$, il numero degli infetti diminuisce.
+
+Il picco epidemico viene raggiunto quando $dI/dt=0$ con $I>0$, cioè quando:
+
+$$
+S(t_{\mathrm{picco}}) = \frac{\gamma}{\beta}N = \frac{N}{R_0}.
+$$
+
+Questa relazione spiega perché la curva degli infetti può iniziare a scendere anche se nella popolazione sono ancora presenti molte persone suscettibili: la loro quantità è scesa sotto la soglia necessaria a sostenere la crescita dell'epidemia.
+
+### Integrazione numerica
+
+Il sistema non viene calcolato con una formula chiusa, ma integrato numericamente. L'app utilizza il metodo Runge–Kutta del quarto ordine. Indicando con $\mathbf{x}=(S,I,R)$ lo stato e con $\mathbf{f}(\mathbf{x})$ il sistema delle derivate, a ogni passo di ampiezza $h$ vengono calcolati:
+
+$$
+\begin{aligned}
+\mathbf{k}_1 &= \mathbf{f}(\mathbf{x}_n), \\
+\mathbf{k}_2 &= \mathbf{f}\left(\mathbf{x}_n+\frac{h}{2}\mathbf{k}_1\right), \\
+\mathbf{k}_3 &= \mathbf{f}\left(\mathbf{x}_n+\frac{h}{2}\mathbf{k}_2\right), \\
+\mathbf{k}_4 &= \mathbf{f}\left(\mathbf{x}_n+h\mathbf{k}_3\right), \\
+\mathbf{x}_{n+1} &= \mathbf{x}_n+\frac{h}{6}
+\left(\mathbf{k}_1+2\mathbf{k}_2+2\mathbf{k}_3+\mathbf{k}_4\right).
+\end{aligned}
+$$
+
+La configurazione predefinita usa $h=0{,}25$ giorni e registra un punto per ogni giorno simulato. Rispetto al metodo di Eulero usato nel progetto originale, Runge–Kutta riduce sensibilmente l'errore numerico e conserva meglio la popolazione totale.
 
 ## Limiti scientifici
 
