@@ -1,32 +1,10 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Analisi epidemiologica</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Simulation
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="/covidstats" Match="NavLinkMatch.All">
-                <span class="oi oi-audio-spectrum" aria-hidden="true"></span> Covid dashboard
-            </NavLink>
-        </li>
-    </ul>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+<header class="site-header">
+    <a class="brand" href="" aria-label="Epidemic Lab, pagina iniziale">
+        <span class="brand-mark" aria-hidden="true">E</span>
+        <span><strong>Epidemic Lab</strong><small>Modello SIR interattivo</small></span>
+    </a>
+    <nav aria-label="Navigazione principale">
+        <NavLink href="" Match="NavLinkMatch.All">Simulatore</NavLink>
+        <NavLink href="metodo">Il modello</NavLink>
+    </nav>
+</header>

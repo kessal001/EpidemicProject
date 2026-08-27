@@ -1,15 +1,8 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
-<div class="sidebar">
+<div class="app-shell">
     <NavMenu />
-</div>
-
-<div class="main">
-    <div class="top-row px-4" style="z-index:1">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-    </div>
-    <div class="content px-4">
+    <main>
         @Body
-        <RadzenDialog />
-    </div>
+    </main>
 </div>

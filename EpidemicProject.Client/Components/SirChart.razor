@@ -1,0 +1,35 @@
+<div class="chart-wrap" role="img" aria-label="Andamento di suscettibili, infetti e rimossi nel tempo">
+    <svg class="sir-chart" viewBox="0 0 1000 420" preserveAspectRatio="none">
+        @for (var line = 0; line <= 4; line++)
+        {
+            var y = 30 + line * 85;
+            <line class="grid-line" x1="55" y1="@y" x2="980" y2="@y" />
+        }
+        <line class="axis" x1="55" y1="370" x2="980" y2="370" />
+        <line class="axis" x1="55" y1="30" x2="55" y2="370" />
+        <polyline class="series susceptible" points="@BuildPoints(x => x.Susceptible)" />
+        <polyline class="series infected" points="@BuildPoints(x => x.Infected)" />
+        <polyline class="series removed" points="@BuildPoints(x => x.Removed)" />
+        <text x="55" y="400">0</text>
+        <text x="930" y="400">@LastDay giorni</text>
+        <text x="12" y="38">100%</text>
+        <text x="28" y="374">0%</text>
+    </svg>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<SIRStat> Data { get; set; } = [];
+    private double LastDay => Data.Count == 0 ? 1 : Data[^1].Day;
+    private double Population => Data.Count == 0 ? 1 : Data[0].Susceptible + Data[0].Infected + Data[0].Removed;
+
+    private string BuildPoints(Func<SIRStat, double> selector)
+    {
+        if (Data.Count == 0) return string.Empty;
+        return string.Join(' ', Data.Select(point =>
+        {
+            var x = 55 + (point.Day / LastDay * 925);
+            var y = 370 - (selector(point) / Population * 340);
+            return $"{x.ToString("0.##", CultureInfo.InvariantCulture)},{y.ToString("0.##", CultureInfo.InvariantCulture)}";
+        }));
+    }
+}

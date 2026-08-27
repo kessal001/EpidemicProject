@@ -1,3 +1,36 @@
+# Epidemic Lab
+
+Versione modernizzata nel 2026 del progetto di maturità del 2020. È un'app Blazor WebAssembly autonoma che permette di esplorare il modello epidemiologico SIR, modificare i parametri e visualizzare l'andamento di suscettibili, infetti e rimossi.
+
+## Avvio rapido
+
+Requisiti: Visual Studio con supporto ASP.NET e sviluppo Web oppure .NET SDK 10.
+
+```powershell
+dotnet restore EpidemicProject.sln
+dotnet run --project EpidemicProject.Client
+```
+
+Aprire l'indirizzo locale mostrato nel terminale. La soluzione non richiede database, chiavi API o servizi esterni.
+
+## Cosa è stato aggiornato
+
+- migrazione da Blazor WebAssembly 3.2 e .NET Framework 4.7.2 a .NET 10;
+- rimozione delle vecchie dipendenze DevExpress, Radzen, ML.NET e dell'API COVID dismessa;
+- integratore Runge-Kutta di quarto ordine, validazione dei parametri e conservazione della popolazione;
+- interfaccia responsive con grafico SVG, scenari rapidi, indicatori e tabella;
+- pagina didattica sul modello SIR e nota sui limiti scientifici.
+
+Per compilare e verificare:
+
+```powershell
+dotnet build EpidemicProject.sln
+```
+
+La relazione originale del 2020 è conservata qui sotto come documentazione storica.
+
+---
+
 ```
 Esame maturit`a 2020
 ```

@@ -1,24 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace DAL;
 
-namespace DAL
+public sealed record SIRStat(double Susceptible, double Infected, double Removed, double Day)
 {
-    public class SIRStat
-    {
-        public SIRStat(double ds, double di, double dr, double dt)
-        {
-            Ds = ds;
-            Di = di;
-            Dr = dr;
-            Dt = dt;
-        }
-
-        public double Ds { get; set; }
-        public double Di { get; set; }
-        public double Dr { get; set; }
-        public double Dt { get; set; }
-    }
+    public double Ds => Susceptible;
+    public double Di => Infected;
+    public double Dr => Removed;
+    public double Dt => Day;
 }

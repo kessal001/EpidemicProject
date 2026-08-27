@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
+namespace DAL;
 
-namespace DAL
+public sealed class ReturnList
 {
-    public class ReturnList
-    {
-        public List<double> DsList { get; set; }
-        public List<double> DiList { get; set; }
-        public List<double> DrList { get; set; }
-    }
+    public List<double> DsList { get; init; } = [];
+    public List<double> DiList { get; init; } = [];
+    public List<double> DrList { get; init; } = [];
 }
